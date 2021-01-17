@@ -393,8 +393,8 @@ public class Camera {
 
     try {
       recordingVideo = false;
-
-	  //ADDED ADDITIONAL CODE
+     
+      //ADDED ADDITIONAL CODE
 
       // try {
       //   Camera.this.cameraCaptureSession.stopRepeating();
@@ -403,9 +403,15 @@ public class Camera {
       //   result.error("cameraException", e.getMessage(), null);
       // } 
 
-      closeCaptureSession();
+      try {
+        cameraCaptureSession.abortCaptures();
+        mediaRecorder.stop();
+      } catch (CameraAccessException | IllegalStateException e) {
+        // Ignore exceptions and try to continue (changes are camera session already aborted capture)
+      }
+
+      //closeCaptureSession();
       
-      mediaRecorder.stop();
       mediaRecorder.reset();
       startPreview();
       result.success(null);
